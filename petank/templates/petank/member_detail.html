@@ -1,0 +1,55 @@
+{% extends 'petank/base.html' %}
+
+
+{% block css %}
+<style>
+.article_image_side {
+    background-image: url("{{ object.photo.small.url }}");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    padding-top: {% if object.photo.get_ratio < 100 %}{{ object.photo.get_ratio }}{% else %}100{% endif %}%;
+}
+
+.article_image_wide {
+    background-image: url("{{ object.photo.small.url }}");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    padding-top: {% if object.photo.get_ratio < 120 %}{{ object.photo.get_ratio }}{% else %}120{% endif %}%;
+}
+
+@media (min-width: 768px) {
+    .article_image_side {
+        background-image: url("{{ object.photo.large.url }}");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center top;
+        padding-top: {% if object.photo.get_ratio < 200 %}{% widthratio object.photo.get_ratio 2 1 %}{% else %}100{% endif %}%;
+        max-height: 1200px;
+        height: auto;
+    }
+    .article_image_wide {
+        background-image: url("{{ object.photo.large.url }}");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center center;
+        height: {% widthratio object.photo.get_ratio 1 object.photo.width %}px;
+        max-height: 600px;
+        padding-top: 0;
+    }
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+    <h2>{{ object.full_name }}</h2>
+    {% if object.text_before %}<div>{{ object.text_before|safe }}</div>{% endif %}
+    {% if object.text_beside %}
+    <div class="article_preview">
+        <div class="article_image_side"></div>
+        <div class="article_text_beside">{{ object.text_beside|safe }}</div>
+    </div>{% else %}<div class="article_image_wide"></div>{% endif %}
+    {% if object.text_after %}<div>{{ object.text_after|safe }}</div>{% endif %}
+{% endblock %}

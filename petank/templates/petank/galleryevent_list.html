@@ -1,0 +1,13 @@
+{% extends 'petank/base.html' %}
+
+
+{% block content %}{% regroup object_list by year as by_year %}
+{% for year, object_list in by_year %}
+    <h2>{{ year }}</h2>
+    <div class="member_list">{% for object in object_list %}
+        <div class="member_preview">
+            <a href="/galerie/{{ object.slug }}/#obsah"><img src="{{ object.photo.cropped.url }}" alt="{{ object.photo.descript }}"></a>
+            <div class="descript">{{ object.headline }}</div>
+        </div>{% endfor %}
+    </div>
+{% endfor %}{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'petank/base.html' %}
+
+
+{% block css %}
+<style>
+#content > .page_width {
+    width: 100%;
+    max-width: none;
+}
+
+/* Small devices */
+@media (min-width: 576px) {
+    #content > .page_width {
+        width: 100%;
+    }
+}
+
+/* Medium devices */
+@media (min-width: 768px) {
+    #content > .page_width {
+        width: 90%;
+        max-width: 1400px;
+    }
+}
+/* Large devices */
+@media (min-width: 992px) {
+    #content > .page_width {
+        width: 90%;
+    }
+}
+/* Extra large devices */
+@media (min-width: 1200px) {
+    #content > .page_width {
+        width: 90%;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>{{ object.headline }}</h2>
+<div class="member_list">{% for object in object_list %}
+    <div class="member_preview">
+        <a href="/clenove/{{ object.slug }}/#obsah"><img src="{% if object.photo.cropped %}{{ object.photo.cropped.url }}{% else %}{% load imagekit %}{% generateimage 'petank:auto_crop' source=object.photo.original as ac %}{{ ac.url }}{% endif %}" alt="{{ object.photo.descript }}"></a>
+        <div class="descript">{{ object.full_name }}</div>
+    </div>{% endfor %}
+</div>{% endblock %}

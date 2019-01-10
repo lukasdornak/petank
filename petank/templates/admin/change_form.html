@@ -1,0 +1,13 @@
+{% extends "admin/change_form.html" %}{% load i18n %}
+{% block field_sets %}
+    <script>
+var auto_cropped_path = {% if not original.cropped and  originl.original %}{% load imagekit %}{% generateimage 'petank:auto_crop' source=original.original as ac %}"{{ ac.url }}"{% else %}false{% endif %};
+    </script>
+    <div id="thumbnail" style="display:none; text-align: center;">
+        <img style="cursor: pointer">
+    </div>
+    <div id="cropper" style="display: none"></div>
+{% for fieldset in adminform %}
+  {% include "admin/includes/fieldset.html" %}
+{% endfor %}
+{% endblock %}

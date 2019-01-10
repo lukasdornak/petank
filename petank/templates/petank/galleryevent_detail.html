@@ -1,0 +1,49 @@
+{% extends 'petank/base.html' %}
+
+
+{% block css %}
+<style>
+#content > .page_width {
+    width: 100%;
+    max-width: none;
+}
+
+/* Small devices */
+@media (min-width: 576px) {
+    #content > .page_width {
+        width: 100%;
+    }
+}
+
+/* Medium devices */
+@media (min-width: 768px) {
+    #content > .page_width {
+        width: 90%;
+        max-width: 1400px;
+    }
+}
+/* Large devices */
+@media (min-width: 992px) {
+    #content > .page_width {
+        width: 90%;
+    }
+}
+/* Extra large devices */
+@media (min-width: 1200px) {
+    #content > .page_width {
+        width: 90%;
+    }
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+<h2>{{ object.headline }}</h2>
+<p>{% if object.date2 and object.date.year == object.date2.year %}{{ object.date|date:"d. m." }}{% else %}{{ object.date|date:"d. m. Y" }}{% endif %}{% if object.date2 %} - {{ object.date2|date:"d. m. Y" }}{% endif %}</p>
+<div class="member_list">{% for photo in object.photos.all %}
+    <div class="member_preview">
+        <a href="/galerie/{{ object.slug }}/"><img src="{% if photo.cropped %}{{ photo.cropped.url }}{% else %}{% load imagekit %}{% generateimage 'petank:auto_crop' source=photo.original as ac %}{{ ac.url }}{% endif %}" alt="{{ photo.descript }}"></a>
+        <div class="descript">{{ photo.descript }}</div>
+    </div>{% endfor %}
+</div>{% endblock %}

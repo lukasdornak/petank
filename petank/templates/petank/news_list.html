@@ -1,0 +1,13 @@
+{% extends 'petank/base.html' %}
+
+{% block content %}
+{% for object in object_list %}
+    <div class="article_preview">
+        <div class="article_text_preview">
+            <h2>{{ object.headline }}</h2>
+            <p>{{ object.short_text }}</p>
+            <a href="/aktuality/{{ object.slug }}/#obsah" class="read_more">číst více</a>
+        </div>
+        <div class="article_image_preview" style="background-image: url('{{ object.photo.cropped.url }}')"></div>
+    </div>
+{% endfor %}{% endblock %}
