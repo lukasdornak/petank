@@ -6,7 +6,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'not secret key')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['petank.lukasdornak.cz', 'petank.cz']
+ALLOWED_HOSTS = ['petank.lukasdornak.cz', 'petank.cz', 'localhost']
 
 INSTALLED_APPS = [
     'petank',
@@ -87,3 +87,17 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Styles', 'FontSize', 'Bold', 'Italic', 'Underline', 'Strike', 'RemoveFormat', 'PasteText', 'Redo', 'Undo', 'Link', 'Unlink', 'Anchor'],
+            ['NumberedList', 'BulletedList', 'Outdent', 'Indent', 'Blockquote'],
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight'],
+            ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar'],
+            ['TextColor', 'BGColor'],
+            ['Source'],
+        ]
+    }
+}

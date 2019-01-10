@@ -45,11 +45,11 @@
 
 {% block content %}
     <h2>{{ object.full_name }}</h2>
-    {% if object.text_before %}<div>{{ object.text_before|safe }}</div>{% endif %}
+    {% if object.text_before %}<div class="user_editable">{{ object.text_before|safe }}</div>{% endif %}
     {% if object.text_beside %}
     <div class="article_preview">
         <div class="article_image_side"></div>
-        <div class="article_text_beside">{{ object.text_beside|safe }}</div>
+        <div class="article_text_beside user_editable">{{ object.text_beside|safe }}</div>
     </div>{% else %}<div class="article_image_wide"></div>{% endif %}
-    {% if object.text_after %}<div>{{ object.text_after|safe }}</div>{% endif %}
+    {% if object.text_after %}<div class="user_editable">{{ object.text_after|safe }}</div>{% endif %}
 {% endblock %}
