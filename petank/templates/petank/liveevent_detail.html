@@ -2,6 +2,7 @@
 
 
 {% block css %}
+    {% if object.photo %}
 <style>
 .article_image_side {
     background-image: url("{{ object.photo.small.url }}");
@@ -40,6 +41,7 @@
     }
 }
 </style>
+    {% endif %}
 {% endblock %}
 
 
