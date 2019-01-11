@@ -43,7 +43,8 @@
 {% endblock %}
 
 
-{% block content %}
+{% block content %}{% if perms.petank.change_member %}
+    <a href="/admin/petank/member/{{ object.pk }}/change/" class="edit_link">upravit</a>{% endif %}
     <h2>{{ object.full_name }}</h2>
     {% if object.text_before %}<div class="user_editable">{{ object.text_before|safe }}</div>{% endif %}
     {% if object.text_beside %}

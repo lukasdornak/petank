@@ -43,7 +43,8 @@
 {% endblock %}
 
 
-{% block content %}
+{% block content %}{% if perms.petank.change_news %}
+    <a href="/admin/petank/news/{{ object.pk }}/change/" class="edit_link">upravit</a>{% endif %}
     <h2>{{ object.headline }}</h2>
     <p>{{ object.date|date:"d. m. Y" }}</p>
     {% if object.text_before %}<div class="user_editable">{{ object.text_before|safe }}</div>{% endif %}

@@ -100,7 +100,19 @@ section {
 #content {
     margin: 6% 0;
 }
-
+.edit_link{
+    font-size: 16px;
+    padding-left: 16px;
+    background: url("/static/admin/img/icon-changelink.svg") 0 1px no-repeat;
+    position: absolute;
+    top: 71vh;
+    right: 12px;
+    text-decoration: none;
+    color: inherit;
+}
+.edit_link:visited {
+    color: inherit;
+}
 .page_width {
     margin: 0 auto;
     width: 90%;
