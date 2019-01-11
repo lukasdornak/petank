@@ -167,9 +167,25 @@ class PhotoAdmin(admin.ModelAdmin):
         }
 
 
+class MemberAdmin(PublishMixin, admin.ModelAdmin):
+    list_display = ['__str__', 'user', 'published']
+    list_editable = ['published']
+    fieldsets = (
+        (None, {
+            'fields': (
+                'first_name', 'last_name', 'user', 'published'
+            )
+        }),
+        ('Obsah', {
+            'fields': (
+                'photo', 'text_before', 'text_beside', 'text_after'
+            )
+        })
+    )
+
 admin.site.register(News, NewsAdmin)
 admin.site.register(Info, InfoAdmin)
 admin.site.register(LiveEvent, LiveEventAdmin)
 admin.site.register(GalleryEvent, GalleryEventAdmin)
 admin.site.register(Photo, PhotoAdmin)
-admin.site.register(Member)
+admin.site.register(Member, MemberAdmin)
