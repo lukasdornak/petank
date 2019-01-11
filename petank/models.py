@@ -169,8 +169,8 @@ class Member(Article):
     date = None
     headline = None
     user = models.OneToOneField(User, verbose_name='uživatel', on_delete=models.CASCADE, null=True, blank=True)
-    name = models.CharField('jméno', max_length=50, help_text='pokud není přiřazen uživatel se jménem', null=True, blank=True)
-    order = models.PositiveSmallIntegerField('pořadí v seznamu', default=1)
+    first_name = models.CharField('jméno', max_length=50)
+    last_name = models.CharField('příjmení', max_length=50)
 
     class Meta:
         verbose_name = 'Člen'
@@ -178,6 +178,13 @@ class Member(Article):
 
     def __str__(self):
         return self.full_name()
+
+    def save(self, *args, **kwargs):
+        if self.user:
+            self.user.first_name = self.first_name
+            self.user.last_name = self.last_name
+            self.user.save(update_fields=['first_name', 'last_name'])
+        super().save(*args, **kwargs)
 
     def get_slug(self):
         slug = slugify(self.full_name())
@@ -187,11 +194,5 @@ class Member(Article):
             i += 1
         return slug
 
-    def clean(self):
-        if not (self.user or self.name):
-            raise ValidationError({'name': 'Je třeba zadat jméno, pokud nechceš přidat uživatele.'})
-
     def full_name(self):
-        return ('{0} {1}'.format(self.user.first_name, self.user.last_name).strip() if
-            (self.user.first_name or self.user.last_name) else self.user.username) if\
-            self.user else self.name.strip()
+        return '{0} {1}'.format(self.first_name, self.last_name).strip()
