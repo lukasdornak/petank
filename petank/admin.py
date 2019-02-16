@@ -111,6 +111,7 @@ class PhotoAdmin(admin.ModelAdmin):
     list_display_links = ['__str__']
     form = PhotoAdminForm
     actions = ['unassign']
+    readonly_fields = ['get_img_url']
 
     def get_usage(self, obj):
         return ", ".join([article.str_dist() or article.__str__() for article in chain(
@@ -123,8 +124,12 @@ class PhotoAdmin(admin.ModelAdmin):
     def get_members(self, obj):
         return ", ".join([member.__str__() for member in obj.member_set.all()])
 
+    def get_img_url(self, obj):
+        return obj.original.url
+
     get_usage.short_description = "použití"
     get_members.short_description = "profilovka"
+    get_img_url.short_description = "url fotky"
 
     def unassign(self, request, queryset):
         for photo in queryset:
