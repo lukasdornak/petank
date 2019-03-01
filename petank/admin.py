@@ -39,7 +39,7 @@ class PublishMixin:
 
 class PhotoInline(admin.TabularInline):
     model = Photo
-    fields = ['original', 'descript', ]
+    fields = ['original', 'description', ]
 
 
 class NewsAdmin(PublishMixin, admin.ModelAdmin):

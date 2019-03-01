@@ -44,7 +44,7 @@
 <p>{% if object.date2 and object.date.year == object.date2.year %}{{ object.date|date:"d. m." }}{% else %}{{ object.date|date:"d. m. Y" }}{% endif %}{% if object.date2 %} - {{ object.date2|date:"d. m. Y" }}{% endif %}</p>
 <div class="member_list">{% for photo in object.photos.all %}
     <div class="member_preview">
-        <a href="/galerie/{{ object.slug }}/"><img src="{% if photo.cropped %}{{ photo.cropped.url }}{% else %}{% load imagekit %}{% generateimage 'petank:auto_crop' source=photo.original as ac %}{{ ac.url }}{% endif %}" alt="{{ photo.descript }}"></a>
-        <div class="descript">{{ photo.descript }}</div>
+        <a href="/galerie/{{ object.slug }}/"><img src="{% if photo.cropped %}{{ photo.cropped.url }}{% else %}{% load imagekit %}{% generateimage 'petank:auto_crop' source=photo.original as ac %}{{ ac.url }}{% endif %}" alt="{{ photo.description }}"></a>
+        <div class="description">{{ photo.description }}</div>
     </div>{% endfor %}
 </div>{% endblock %}

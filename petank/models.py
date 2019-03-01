@@ -21,10 +21,10 @@ class OverwriteStorage(FileSystemStorage):
 
 
 def path_photo(instance, filename):
-    return 'photo/{0}-{1}.jpg'.format(instance.id, slugify(instance.descript))
+    return 'photo/{0}-{1}.jpg'.format(instance.id, slugify(instance.description))
 
 def path_photo_cropped(instance, filename):
-    return 'photo/{0}-{1}_cropped.png'.format(instance.id, slugify(instance.descript))
+    return 'photo/{0}-{1}_cropped.png'.format(instance.id, slugify(instance.description))
 
 
 class AutoCrop(ImageSpec):
@@ -138,7 +138,7 @@ class Photo(models.Model):
     cropped = models.ImageField('ořez', upload_to=path_photo_cropped, storage=OverwriteStorage(), null=True, blank=False)
     small = ImageSpecField(source='original', processors=[ResizeToFit(600, 600)], format='JPEG', options={'quality': 100})
     large = ImageSpecField(source='original', processors=[ResizeToFit(1200, 1200)], format='JPEG', options={'quality': 100})
-    descript = models.CharField('popisek', max_length=150)
+    description = models.CharField('popisek', max_length=150)
     gallery = models.ForeignKey(GalleryEvent, verbose_name='galerie', on_delete=models.CASCADE,
                                 related_name='photos', null=True, blank=True)
     class Meta:
@@ -146,7 +146,7 @@ class Photo(models.Model):
         verbose_name_plural = 'fotky'
 
     def __str__(self):
-        return self.descript
+        return self.description
 
     def save(self, *args, **kwargs):
         hidden_original = self.original

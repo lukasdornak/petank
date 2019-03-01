@@ -38,10 +38,10 @@
 {% endblock %}
 
 {% block content %}
-<h2>{{ object.headline }}</h2>
+<h2>Tady nás máte</h2>
 <div class="member_list">{% for object in object_list %}
     <div class="member_preview">
-        <a href="/clenove/{{ object.slug }}/#obsah"><img src="{% if object.photo.cropped %}{{ object.photo.cropped.url }}{% else %}{% load imagekit %}{% generateimage 'petank:auto_crop' source=object.photo.original as ac %}{{ ac.url }}{% endif %}" alt="{{ object.photo.descript }}"></a>
-        <div class="descript">{{ object.full_name }}</div>
+        <a href="/clenove/{{ object.slug }}/#obsah"><img src="{% if object.photo.cropped %}{{ object.photo.cropped.url }}{% else %}{% load imagekit %}{% generateimage 'petank:auto_crop' source=object.photo.original as ac %}{{ ac.url }}{% endif %}" alt="{{ object.photo.description }}"></a>
+        <div class="description">{{ object.full_name }}</div>
     </div>{% endfor %}
 </div>{% endblock %}

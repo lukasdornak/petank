@@ -6,5 +6,5 @@ class PhotoAdminForm(forms.ModelForm):
     cropped = forms.CharField(widget=forms.HiddenInput, required=False)
 
     class Meta:
-        fields = ['original', 'descript', 'gallery', ]
+        fields = ['original', 'description', 'gallery', ]
         model = Photo
