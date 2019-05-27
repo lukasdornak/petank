@@ -1,0 +1,5 @@
+{% if text %}<p><b>{{ text }}</b></p>{% endif %}
+<div class="member_preview" style="margin: 0 auto;">
+    <a href="/galerie/{{ gallery.slug }}/#obsah" style="display: block"><img src="{{ gallery.photo.cropped.url }}" alt="{{ gallery.headline }}"></a>
+    <div class="description">{{ gallery.headline }}</div>
+</div>

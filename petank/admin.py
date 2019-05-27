@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
-from django.contrib import admin, messages
-from .models import *
-from .forms import PhotoAdminForm
-
-from django.forms import Textarea
-
 import base64
 from io import BytesIO
 from itertools import chain
+
+from django.contrib import admin, messages
 from django.core.files.uploadedfile import InMemoryUploadedFile
+
+from .models import *
+from .forms import PhotoAdminForm, GalleryEventAdminForm
 
 
 def make_assign_to_gallery(gallery):
@@ -40,15 +38,16 @@ class PublishMixin:
 class PhotoInline(admin.TabularInline):
     model = Photo
     fields = ['original', 'description', ]
+    extra = 1
 
 
 class NewsAdmin(PublishMixin, admin.ModelAdmin):
-    list_display = ['__str__', 'date', 'published']
-    list_editable = ['date', 'published']
+    list_display = ['headline', 'date', 'published']
+    list_editable = ['published']
     fieldsets = (
         (None, {
             'fields': (
-                'date', 'headline', 'short_text', 'published'
+                'date', 'headline', 'short_text', 'published', 'gallery_link', 'gallery_link_text'
             )
         }),
         ('Obsah', {
@@ -60,12 +59,12 @@ class NewsAdmin(PublishMixin, admin.ModelAdmin):
 
 
 class InfoAdmin(PublishMixin, admin.ModelAdmin):
-    list_display = ['__str__', 'link', 'order', 'published']
+    list_display = ['headline', 'link', 'order', 'published']
     list_editable = ['order', 'published']
     fieldsets = (
         (None, {
             'fields': (
-                'headline', 'link', 'order', 'published'
+                'headline', 'link', 'order', 'published', 'gallery_link', 'gallery_link_text'
             )
         }),
         ('Obsah', {
@@ -77,12 +76,12 @@ class InfoAdmin(PublishMixin, admin.ModelAdmin):
 
 
 class LiveEventAdmin(PublishMixin, admin.ModelAdmin):
-    list_display = ['__str__', 'date', 'date2', 'link', 'published']
-    list_editable = ['date', 'date2', 'published']
+    list_display = ['headline', 'link', 'date', 'date2', 'published']
+    list_editable = ['published']
     fieldsets = (
         (None, {
             'fields': (
-                'date', 'date2', 'headline', 'link', 'published'
+                'date', 'date2', 'headline', 'link', 'published', 'gallery_link', 'gallery_link_text'
             )
         }),
         ('Obsah', {
@@ -94,21 +93,28 @@ class LiveEventAdmin(PublishMixin, admin.ModelAdmin):
 
 
 class GalleryEventAdmin(PublishMixin, admin.ModelAdmin):
-    list_display = ['__str__', 'date', 'date2', 'headline', 'year', 'published']
-    list_editable = ['date', 'date2', 'published']
+    list_display = ['headline', 'date', 'date2', 'year', 'published']
+    list_editable = ['published']
     inlines = [PhotoInline, ]
+    form = GalleryEventAdminForm
     fieldsets = (
         (None, {
             'fields': (
-                'date', 'date2', 'headline', 'published', 'photo'
+                'date', 'date2', 'headline', 'published', 'photo', 'photo_list', 'photo_list_description'
             )
         }),
     )
 
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        photo_list = dict(form.files).get('photo_list', [])
+        for photo in photo_list:
+            Photo.objects.create(original=photo, description=form.cleaned_data.get('photo_list_description') or obj.headline, gallery=obj)
+
 
 class PhotoAdmin(admin.ModelAdmin):
-    list_display = ['id', '__str__', 'get_usage', 'get_members', 'gallery']
-    list_display_links = ['__str__']
+    list_display = ['id', 'description', 'get_usage', 'get_members', 'gallery']
+    list_display_links = ['description']
     form = PhotoAdminForm
     actions = ['unassign']
     readonly_fields = ['get_img_url']
@@ -173,12 +179,12 @@ class PhotoAdmin(admin.ModelAdmin):
 
 
 class MemberAdmin(PublishMixin, admin.ModelAdmin):
-    list_display = ['__str__', 'user', 'published']
+    list_display = ['first_name', 'last_name', 'user', 'published']
     list_editable = ['published']
     fieldsets = (
         (None, {
             'fields': (
-                'first_name', 'last_name', 'user', 'published'
+                'first_name', 'last_name', 'user', 'published', 'gallery_link', 'gallery_link_text'
             )
         }),
         ('Obsah', {

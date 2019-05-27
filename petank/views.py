@@ -54,3 +54,15 @@ class GalleryEventListView(ContextMixin, generic.ListView):
 
 class GalleryEventDetailView(ContextMixin, generic.DetailView):
     model = GalleryEvent
+
+
+class PhotoDetailView(generic.DetailView):
+    model = Photo
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super().get_context_data()
+        context_data['gallery_info'] = self.object.get_gallery_info()
+        return context_data
+
+    def get_queryset(self):
+        return super().get_queryset().filter(gallery__slug=self.kwargs.get('gallery'))

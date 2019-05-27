@@ -1,6 +1,5 @@
 {% extends 'petank/base.html' %}
 
-
 {% block css %}
 <style>
 #content > .page_width {
@@ -37,14 +36,13 @@
 </style>
 {% endblock %}
 
-
 {% block content %}{% if perms.petank.change_galleryevent %}
 <a href="/admin/petank/galleryevent/{{ object.pk }}/change/" class="edit_link">upravit</a>{% endif %}
 <h2>{{ object.headline }}</h2>
 <p>{% if object.date2 and object.date.year == object.date2.year %}{{ object.date|date:"d. m." }}{% else %}{{ object.date|date:"d. m. Y" }}{% endif %}{% if object.date2 %} - {{ object.date2|date:"d. m. Y" }}{% endif %}</p>
 <div class="member_list">{% for photo in object.photos.all %}
     <div class="member_preview">
-        <a href="/galerie/{{ object.slug }}/"><img src="{% if photo.cropped %}{{ photo.cropped.url }}{% else %}{% load imagekit %}{% generateimage 'petank:auto_crop' source=photo.original as ac %}{{ ac.url }}{% endif %}" alt="{{ photo.description }}"></a>
+        <a href="/galerie/{{ object.slug }}/{{ photo.slug }}/"><img src="{% if photo.cropped %}{{ photo.cropped.url }}{% else %}{% load imagekit %}{% generateimage 'petank:auto_crop' source=photo.original as ac %}{{ ac.url }}{% endif %}" alt="{{ photo.description }}"></a>
         <div class="description">{{ photo.description }}</div>
     </div>{% endfor %}
 </div>{% endblock %}

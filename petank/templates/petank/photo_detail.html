@@ -1,0 +1,52 @@
+{% load staticfiles %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'petank/css/style.css' %}"/>
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    {% block head %}{% endblock %}
+    {% block css %}{% endblock %}
+</head>
+<body>
+<style>
+body, header {
+    background-color: rgb(0,5,14);
+}
+main {
+    padding-top: 60px;
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+h3 {
+    color: white;
+    margin: 0;
+}
+</style>
+<header>
+    <div class="page_width">
+        <a href="/"><img src="{% static 'petank/img/logo.png' %}" id="logo_head" class="no_transition"></a>
+        <div><h3>{{ gallery_info.index }} / {{ gallery_info.length }}</h3></div>
+        <a href="/galerie/{{ gallery_info.gallery }}/#obsah"><div id="menu_button" class="cross visible">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+        </div></a>
+    </div>
+</header>
+<main>
+    <div id="photo_detail">
+        <img src="{{ photo.large.url }}" alt="{{ photo.description }}">
+        <div class="description">{{ photo.description }}</div>
+        <a href="/galerie/{{ gallery_info.gallery }}/{{ gallery_info.previous }}" id="previous"><img src="{% static 'petank/img/left.png' %}" alt="previous"/></a>
+        <a href="/galerie/{{ gallery_info.gallery }}/{{ gallery_info.next }}" id="next"><img src="{% static 'petank/img/right.png' %}" alt="next"/></a>
+    </div>
+</main>
+</body>
+</html>

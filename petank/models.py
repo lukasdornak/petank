@@ -3,6 +3,7 @@ import os
 
 from django.conf import settings
 from django.db import models
+from django.dispatch import receiver
 from ckeditor.fields import RichTextField
 from django.utils.text import slugify
 from django.contrib.auth.models import User
@@ -10,7 +11,6 @@ from django.core.files.storage import FileSystemStorage
 from imagekit import ImageSpec, register
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit, ResizeToFill
-from django.core.exceptions import ValidationError
 
 
 class OverwriteStorage(FileSystemStorage):
@@ -21,7 +21,8 @@ class OverwriteStorage(FileSystemStorage):
 
 
 def path_photo(instance, filename):
-    return 'photo/{0}-{1}.jpg'.format(instance.id, slugify(instance.description))
+    return 'photo/{0}-{1}.{2}'.format(instance.id, slugify(instance.description), filename.split('.')[-1])
+
 
 def path_photo_cropped(instance, filename):
     return 'photo/{0}-{1}_cropped.png'.format(instance.id, slugify(instance.description))
@@ -43,8 +44,12 @@ class Article(models.Model):
     published = models.BooleanField('publikováno', default=False, help_text='Bude se zobrazovat všem návštěvníkům webu.')
     slug = models.SlugField(unique=True, editable=False)
     text_before = RichTextField('obsah nad obrázkem', null=True, blank=True)
-    text_beside = RichTextField('obsah vedle obrázku', null=True, blank=True, help_text='Pro optimální vzhled je vhodné použít toto pole pouze je-li fotka na výšku.')
+    text_beside = RichTextField('obsah vedle obrázku', null=True, blank=True,
+                                help_text='Pro optimální vzhled je vhodné použít toto pole pouze je-li fotka na výšku.')
     text_after = RichTextField('obsah pod obrázkem', null=True, blank=True)
+    gallery_link = models.ForeignKey('GalleryEvent', verbose_name='odkay do galerie', on_delete=models.SET_NULL,
+                                     null=True, blank=True)
+    gallery_link_text = models.CharField('text odkazu do galerie', max_length=100, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -106,10 +111,12 @@ class LiveEvent(Article):
 class GalleryEvent(Article):
     date2 = models.DateField('datum do', null=True, blank=True,
                              help_text='Není-li galerie z jednoho dne ale za nějakou dobu, pak "datum do" slouží jako konec takové doby.')
-    year = models.DecimalField(max_digits=4, decimal_places=0, editable=False)
+    year = models.DecimalField('rok', max_digits=4, decimal_places=0, editable=False)
     headline = models.CharField('nadpis', max_length=100)
     photo = models.ForeignKey('Photo', verbose_name='fotka', on_delete=models.PROTECT,
                               help_text='Pro zobrazení v seznamu galerií.')
+    gallery_link = None
+    gallery_link_text = None
 
     class Meta:
         verbose_name = 'galerie'
@@ -132,15 +139,18 @@ class GalleryEvent(Article):
 
 
 class Photo(models.Model):
-    original = models.ImageField('fotka', width_field='width', height_field='height', upload_to=path_photo, storage=OverwriteStorage(), null=True, blank=False)
+    original = models.ImageField('fotka', width_field='width', height_field='height', upload_to=path_photo,
+                                 storage=OverwriteStorage(), null=True, blank=False)
     width = models.PositiveSmallIntegerField('šířka', null=True, blank=True, editable=False)
     height = models.PositiveSmallIntegerField('šířka', null=True, blank=True, editable=False)
     cropped = models.ImageField('ořez', upload_to=path_photo_cropped, storage=OverwriteStorage(), null=True, blank=False)
     small = ImageSpecField(source='original', processors=[ResizeToFit(600, 600)], format='JPEG', options={'quality': 100})
     large = ImageSpecField(source='original', processors=[ResizeToFit(1200, 1200)], format='JPEG', options={'quality': 100})
     description = models.CharField('popisek', max_length=150)
-    gallery = models.ForeignKey(GalleryEvent, verbose_name='galerie', on_delete=models.CASCADE,
+    gallery = models.ForeignKey(GalleryEvent, verbose_name='galerie', on_delete=models.SET_NULL,
                                 related_name='photos', null=True, blank=True)
+    slug = models.SlugField(editable=False, null=True)
+
     class Meta:
         verbose_name = 'fotka'
         verbose_name_plural = 'fotky'
@@ -156,13 +166,27 @@ class Photo(models.Model):
         super().save(*args, **kwargs)
         self.original = hidden_original
         self.cropped = hidden_cropped
-        super().save(update_fields=['original', 'cropped'])
+        self.slug = f'{ self.id }-{ slugify(self.description) }'
+        super().save(update_fields=['original', 'cropped', 'slug'])
 
     def get_ratio(self):
         return round(100*self.height/self.width) if (self.height and self.width) else 0
 
     def assign_to(self, gallery):
         gallery.photos.add(self)
+
+    def get_gallery_info(self):
+        photos = list(Photo.objects.filter(gallery=self.gallery).values_list('slug', flat=True))
+        index = photos.index(self.slug)
+        length = len(photos)
+        gallery_info = {
+            'index': index + 1,
+            'length': length,
+            'previous': photos[(index-1+length) % length],
+            'next': photos[(index+1) % length],
+            'gallery': self.gallery.slug
+        }
+        return gallery_info
 
 
 class Member(Article):
@@ -196,3 +220,12 @@ class Member(Article):
 
     def full_name(self):
         return '{0} {1}'.format(self.first_name, self.last_name).strip()
+
+
+@receiver(models.signals.post_delete, sender=Photo)
+def remove_photo_file(sender, instance, **kwargs):
+    os.remove(f'{ settings.BASE_DIR }{ instance.original.url }')
+    try:
+        os.remove(f'{ settings.BASE_DIR }{ instance.cropped.url }')
+    except ValueError:
+        pass

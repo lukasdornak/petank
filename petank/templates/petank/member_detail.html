@@ -52,5 +52,6 @@
         <div class="article_image_side"></div>
         <div class="article_text_beside user_editable">{{ object.text_beside|safe }}</div>
     </div>{% else %}<div class="article_image_wide"></div>{% endif %}
-    {% if object.text_after %}<div class="user_editable">{{ object.text_after|safe }}</div>{% endif %}
+    {% if object.text_after %}<div class="user_editable">{{ object.text_after|safe }}</div>{% endif %}{% if object.gallery_link %}
+    {% include 'petank/gallery_link.html' with text=object.gallery_link_text gallery=object.gallery_link %}{% endif %}
 {% endblock %}

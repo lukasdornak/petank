@@ -19,6 +19,7 @@ urlpatterns = [
     path('poradame/<slug:slug>/', views.LiveEventDetailView.as_view()),
     path('galerie/', views.GalleryEventListView.as_view()),
     path('galerie/<slug:slug>/', views.GalleryEventDetailView.as_view()),
+    path('galerie/<slug:gallery>/<slug:slug>/', views.PhotoDetailView.as_view()),
 ]
 
 if settings.DEBUG:

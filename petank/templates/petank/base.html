@@ -12,36 +12,41 @@
     {% block css %}{% endblock %}
 </head>
 <body>
-<div id="menu_bar" class="on_the_top">
+<header class="on_the_top">
     <div class="page_width">
-        <div id="logo_menu"></div>
-        <nav id="menu">
-            <span class="anim"><a href="/aktuality/#obsah"{% if model == 'News' %} class="active"{% endif %}>AKTUALITY</a></span>
+        <a href="/"><img src="{% static 'petank/img/logo.png' %}" id="logo_head" class="no_transition"></a>
+        <div id="menu_button">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+        </div>
+        <nav class="hidden">
+            <a href="/aktuality/#obsah" class="anim{% if model == 'News' %} active{% endif %}">AKTUALITY</a>
             <div class="dropdown">
-                <span class="anim"><button class="dropdown_button{% if model == 'Info' or model == 'Member' %} active{% endif %}">O NÁS</button></span>
+                <span {% if model == 'Info' or model == 'Member' %}class="active"{% endif %}>O&nbsp;NÁS</span>
                 <div class="dropdown_content">
-                    <span class="anim"><a href="/clenove/#obsah">Členové</a></span>{% for info in info_list %}<br/>
-                    <span class="anim"><a href="/o_nas/{{ info.slug }}/#obsah">{{ info.link }}</a></span>{% endfor %}
+                    <a href="/clenove/#obsah" class="anim">Členové</a>{% for info in info_list %}
+                    <a href="/o_nas/{{ info.slug }}/#obsah" class="anim">{{ info.link }}</a>{% endfor %}
                 </div>
             </div>
             <div class="dropdown">
-                <span class="anim"><button class="dropdown_button{% if model == 'LiveEvent' %} active{% endif %}">POŘÁDÁME</button></span>
+                <span {% if model == 'LiveEvent' %} class="active"{% endif %}>POŘÁDÁME</span>
                 <div class="dropdown_content">{% for event in liveevent_list %}
-                    <span class="anim"><a href="/poradame/{{ event.slug }}/#obsah">{{ event.link }}</a></span>{% if forloop.last %}{% else %}<br />{% endif %}{% endfor %}
+                    <a href="/poradame/{{ event.slug }}/#obsah" class="anim">{{ event.link }}</a>{% endfor %}
                 </div>
             </div>
-            <span class="anim"><a href="/galerie/#obsah "{% if model == 'GalleryEvent' %} class="active"{% endif %}>GALERIE</a></span>
-            <span class="anim"><a href="#kontakt">KONTAKT</a></span>
+            <a href="/galerie/#obsah" class="anim{% if model == 'GalleryEvent' %} active{% endif %}">GALERIE</a>
+            <a href="#kontakt" class="anim">KONTAKT</a>
         </nav>
     </div>
-</div>
+</header>
 <section id="header">
     <div id="obsah"></div>
 </section>
 <section id="content">
     <div class="page_width">{% block content %}{% endblock %}</div>
 </section>
-<section id="footer">
+<footer>
     <div class="page_width">
         <div class="article_preview">
             <div id="kontakt" class="article_text_preview">
@@ -51,23 +56,34 @@
             <div id="logo_foot" class="article_image_preview"></div>
         </div>
     </div>
-</section>
+</footer>
 <script>
 
 $(function(){
     var scrolled = $(window).scrollTop() >= 25;
     if (scrolled){
-        $('#menu_bar').removeClass('on_the_top');
+        $('header').removeClass('on_the_top');
     }
     $(document).on( "scroll", function(event) {
         if ($(window).scrollTop() >= 25 && !scrolled) {
-            $('#menu_bar').removeClass('on_the_top');
+            $('header').removeClass('on_the_top');
             scrolled = true;
         } else if ($(window).scrollTop() < 25 && scrolled) {
-            $('#menu_bar').addClass('on_the_top');
+            $('header').addClass('on_the_top');
             scrolled = false;
         }
     });
+    $('#menu_button').click(function () {
+        $('nav').toggleClass('hidden');
+        $(this).toggleClass('cross');
+    });
+    $('nav a').click(function () {
+        $('nav').addClass('hidden');
+        $('#menu_button').removeClass('cross');
+    });
+    setTimeout(function () {
+        $('.no_transition').removeClass('no_transition');
+    },400);
 })
 
 </script>

@@ -1,5 +1,4 @@
 $(function () {
-    console.log(auto_cropped_path);
     $('#cropper').croppie({
         viewport: {width: 496, height: 496, type: 'squere'},
         boundary: {width: 700, height: 700},

@@ -8,3 +8,11 @@ class PhotoAdminForm(forms.ModelForm):
     class Meta:
         fields = ['original', 'description', 'gallery', ]
         model = Photo
+
+class GalleryEventAdminForm(forms.ModelForm):
+    photo_list = forms.ImageField(widget=forms.FileInput(attrs={'multiple': True}), required=False, label='fotky')
+    photo_list_description = forms.CharField(required=False, label='popisek')
+
+    class Meta:
+        fields = ['date', 'date2', 'headline', 'published', 'photo', 'photo_list', 'photo_list_description']
+        model = GalleryEvent
