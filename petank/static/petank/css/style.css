@@ -213,23 +213,22 @@ footer {
 .anim {
   border: 0 none;
   position: relative; }
+  .anim:after {
+    content: "";
+    position: absolute;
+    width: 80%;
+    height: 3px;
+    bottom: 0;
+    left: 10%;
+    background: white;
+    visibility: hidden;
+    border-radius: 5px;
+    transform: scaleX(0);
+    transition: .25s linear; }
 
-.anim:before {
-  content: "";
-  position: absolute;
-  width: 80%;
-  height: 3px;
-  bottom: 0;
-  left: 10%;
-  background: white;
-  visibility: hidden;
-  border-radius: 5px;
-  transform: scaleX(0);
-  transition: .25s linear; }
-
-.anim:hover:before,
-.anim.active:before,
-.anim:focus:before {
+a.anim:hover:after,
+a.anim:focus:after,
+.anim.active:after {
   visibility: visible;
   transform: scaleX(1); }
 

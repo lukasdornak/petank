@@ -23,14 +23,14 @@
         <nav class="hidden">
             <a href="/aktuality/#obsah" class="anim{% if model == 'News' %} active{% endif %}">AKTUALITY</a>
             <div class="dropdown">
-                <span {% if model == 'Info' or model == 'Member' %}class="active"{% endif %}>O&nbsp;NÁS</span>
+                <span class="anim{% if model == 'Info' or model == 'Member' %} active{% endif %}">O&nbsp;NÁS</span>
                 <div class="dropdown_content">
                     <a href="/clenove/#obsah" class="anim">Členové</a>{% for info in info_list %}
                     <a href="/o_nas/{{ info.slug }}/#obsah" class="anim">{{ info.link }}</a>{% endfor %}
                 </div>
             </div>
             <div class="dropdown">
-                <span {% if model == 'LiveEvent' %} class="active"{% endif %}>POŘÁDÁME</span>
+                <span class="anim{% if model == 'LiveEvent' %} active{% endif %}">POŘÁDÁME</span>
                 <div class="dropdown_content">{% for event in liveevent_list %}
                     <a href="/poradame/{{ event.slug }}/#obsah" class="anim">{{ event.link }}</a>{% endfor %}
                 </div>
