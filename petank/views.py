@@ -40,12 +40,16 @@ class LiveEventDetailView(ContextMixin, generic.DetailView):
     model = LiveEvent
 
 
-class MemberListView(ContextMixin, generic.ListView):
-    model = Member
+# class MemberListView(ContextMixin, generic.ListView):
+#     model = Member
+#
+#
+# class MemberDetailView(ContextMixin, generic.DetailView):
+#     model = Member
 
 
-class MemberDetailView(ContextMixin, generic.DetailView):
-    model = Member
+class SponsorListView(ContextMixin, generic.ListView):
+    model = Sponsor
 
 
 class GalleryEventListView(ContextMixin, generic.ListView):

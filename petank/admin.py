@@ -178,25 +178,31 @@ class PhotoAdmin(admin.ModelAdmin):
         }
 
 
-class MemberAdmin(PublishMixin, admin.ModelAdmin):
-    list_display = ['first_name', 'last_name', 'user', 'published']
-    list_editable = ['published']
-    fieldsets = (
-        (None, {
-            'fields': (
-                'first_name', 'last_name', 'user', 'published', 'gallery_link', 'gallery_link_text'
-            )
-        }),
-        ('Obsah', {
-            'fields': (
-                'photo', 'text_before', 'text_beside', 'text_after'
-            )
-        })
-    )
+# class MemberAdmin(PublishMixin, admin.ModelAdmin):
+#     list_display = ['first_name', 'last_name', 'user', 'published']
+#     list_editable = ['published']
+#     fieldsets = (
+#         (None, {
+#             'fields': (
+#                 'first_name', 'last_name', 'user', 'published', 'gallery_link', 'gallery_link_text'
+#             )
+#         }),
+#         ('Obsah', {
+#             'fields': (
+#                 'photo', 'text_before', 'text_beside', 'text_after'
+#             )
+#         })
+#     )
+
+class SponsorAdmin(admin.ModelAdmin):
+    list_display = ['name', 'link', 'order']
+    list_editable = ['order']
+
 
 admin.site.register(News, NewsAdmin)
 admin.site.register(Info, InfoAdmin)
 admin.site.register(LiveEvent, LiveEventAdmin)
 admin.site.register(GalleryEvent, GalleryEventAdmin)
 admin.site.register(Photo, PhotoAdmin)
-admin.site.register(Member, MemberAdmin)
+# admin.site.register(Member, MemberAdmin)
+admin.site.register(Sponsor, SponsorAdmin)

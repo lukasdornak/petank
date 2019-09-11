@@ -232,6 +232,23 @@ footer {
     flex-wrap: wrap;
     justify-content: center;
 }
+.sp_list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.sp {
+    margin: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    width: 250px;
+    img {
+        max-width: 250px;
+        max-height: 250px;
+    }
+}
+
 .anim {
     border: 0 none;
     position: relative;

@@ -6,7 +6,7 @@ from django.db import models
 from django.dispatch import receiver
 from ckeditor.fields import RichTextField
 from django.utils.text import slugify
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from imagekit import ImageSpec, register
 from imagekit.models import ImageSpecField
@@ -26,6 +26,10 @@ def path_photo(instance, filename):
 
 def path_photo_cropped(instance, filename):
     return 'photo/{0}-{1}_cropped.png'.format(instance.id, slugify(instance.description))
+
+
+def path_sponsor_logo(instance, filename):
+    return 'slogo/{0}.{1}'.format(slugify(instance.name), filename.split('.')[-1])
 
 
 class AutoCrop(ImageSpec):
@@ -189,37 +193,52 @@ class Photo(models.Model):
         return gallery_info
 
 
-class Member(Article):
-    date = None
-    headline = None
-    user = models.OneToOneField(User, verbose_name='uživatel', on_delete=models.CASCADE, null=True, blank=True)
-    first_name = models.CharField('jméno', max_length=50)
-    last_name = models.CharField('příjmení', max_length=50)
+# class Member(Article):
+#     date = None
+#     headline = None
+#     user = models.OneToOneField(User, verbose_name='uživatel', on_delete=models.CASCADE, null=True, blank=True)
+#     first_name = models.CharField('jméno', max_length=50)
+#     last_name = models.CharField('příjmení', max_length=50)
+#
+#     class Meta:
+#         verbose_name = 'Člen'
+#         verbose_name_plural = 'Členové'
+#
+#     def __str__(self):
+#         return self.full_name()
+#
+#     def save(self, *args, **kwargs):
+#         if self.user:
+#             self.user.first_name = self.first_name
+#             self.user.last_name = self.last_name
+#             self.user.save(update_fields=['first_name', 'last_name'])
+#         super().save(*args, **kwargs)
+#
+#     def get_slug(self):
+#         slug = slugify(self.full_name())
+#         i = 2
+#         while Member.objects.filter(slug=slug).exists():
+#             slug = '{0}_{1}'.format(slugify(self.full_name()), i)
+#             i += 1
+#         return slug
+#
+#     def full_name(self):
+#         return '{0} {1}'.format(self.first_name, self.last_name).strip()
+
+
+class Sponsor(models.Model):
+    name = models.CharField('jméno', max_length=50, unique=True)
+    link = models.URLField('odkaz', max_length=50)
+    logo = models.ImageField('logo', upload_to=path_sponsor_logo, storage=OverwriteStorage())
+    order = models.PositiveSmallIntegerField('pořadí', default=1)
 
     class Meta:
-        verbose_name = 'Člen'
-        verbose_name_plural = 'Členové'
+        verbose_name = 'Sponzor'
+        verbose_name_plural = 'Sponzoři'
+        ordering = ['order']
 
     def __str__(self):
-        return self.full_name()
-
-    def save(self, *args, **kwargs):
-        if self.user:
-            self.user.first_name = self.first_name
-            self.user.last_name = self.last_name
-            self.user.save(update_fields=['first_name', 'last_name'])
-        super().save(*args, **kwargs)
-
-    def get_slug(self):
-        slug = slugify(self.full_name())
-        i = 2
-        while Member.objects.filter(slug=slug).exists():
-            slug = '{0}_{1}'.format(slugify(self.full_name()), i)
-            i += 1
-        return slug
-
-    def full_name(self):
-        return '{0} {1}'.format(self.first_name, self.last_name).strip()
+        return self.name
 
 
 @receiver(models.signals.post_delete, sender=Photo)

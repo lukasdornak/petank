@@ -23,9 +23,10 @@
         <nav class="hidden">
             <a href="/aktuality/#obsah" class="anim{% if model == 'News' %} active{% endif %}">AKTUALITY</a>
             <div class="dropdown">
-                <span class="anim{% if model == 'Info' or model == 'Member' %} active{% endif %}">O&nbsp;NÁS</span>
-                <div class="dropdown_content">
-                    <a href="/clenove/#obsah" class="anim">Členové</a>{% for info in info_list %}
+                <span class="anim{% if model == 'Info' or model == 'Member' or model == 'Sponsor' %} active{% endif %}">O&nbsp;NÁS</span>
+                <div class="dropdown_content">{% comment %}
+                    <a href="/clenove/#obsah" class="anim">Členové</a>{% endcomment %}
+                    <a href="/sponzori/#obsah" class="anim">Sponzoři</a>{% for info in info_list %}
                     <a href="/o_nas/{{ info.slug }}/#obsah" class="anim">{{ info.link }}</a>{% endfor %}
                 </div>
             </div>

@@ -1,0 +1,35 @@
+{% extends 'petank/base.html' %}
+
+
+{% block css %}
+<style>
+#content > .page_width {
+    width: 100%;
+    max-width: none;
+}
+
+/* Small devices */
+@media (min-width: 576px) {
+    #content > .page_width {
+        width: 90%;
+    }
+}
+
+/* Medium devices */
+@media (min-width: 768px) {
+    #content > .page_width {
+        width: 80%;
+        max-width: 900px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h2>Naši milí sponzoři</h2>
+<div class="sp_list">{% for object in object_list %}
+    <div class="sp">
+        <div><a href="{{ object.link }}"><img src="{{ object.logo.url }}" alt="{{ object.name }} - logo"></a></div>
+        <div>{{ object.name }}</div>
+    </div>{% endfor %}
+</div>{% endblock %}
