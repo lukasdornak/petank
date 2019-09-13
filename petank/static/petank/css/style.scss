@@ -359,6 +359,14 @@ header > .page_width {
         transform: rotate(45deg) translate(-9px, -10px);
     }
 }
+.social {
+    img {
+        display: inline-block;
+        width: 36px;
+        margin: 0 5px;
+    }
+}
+
 /* Small devices */
 @media (min-width: 576px) {
     .page_width {
