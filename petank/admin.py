@@ -113,7 +113,7 @@ class GalleryEventAdmin(PublishMixin, admin.ModelAdmin):
 
 
 class PhotoAdmin(admin.ModelAdmin):
-    list_display = ['id', 'description', 'get_usage', 'get_members', 'gallery']
+    list_display = ['id', 'description', 'get_usage', 'gallery']
     list_display_links = ['description']
     form = PhotoAdminForm
     actions = ['unassign']
@@ -127,14 +127,14 @@ class PhotoAdmin(admin.ModelAdmin):
             obj.galleryevent_set.all(),
         )])
 
-    def get_members(self, obj):
-        return ", ".join([member.__str__() for member in obj.member_set.all()])
+    # def get_members(self, obj):
+    #     return ", ".join([member.__str__() for member in obj.member_set.all()])
 
     def get_img_url(self, obj):
         return obj.original.url
 
     get_usage.short_description = "použití"
-    get_members.short_description = "profilovka"
+    # get_members.short_description = "profilovka"
     get_img_url.short_description = "url fotky"
 
     def unassign(self, request, queryset):
@@ -194,9 +194,9 @@ class PhotoAdmin(admin.ModelAdmin):
 #         })
 #     )
 
-class SponsorAdmin(admin.ModelAdmin):
-    list_display = ['name', 'link', 'order']
-    list_editable = ['order']
+class SponsorAdmin(PublishMixin, admin.ModelAdmin):
+    list_display = ['name', 'link', 'order', 'published']
+    list_editable = ['order', 'published']
 
 
 admin.site.register(News, NewsAdmin)

@@ -231,6 +231,7 @@ class Sponsor(models.Model):
     link = models.URLField('odkaz', max_length=50)
     logo = models.ImageField('logo', upload_to=path_sponsor_logo, storage=OverwriteStorage())
     order = models.PositiveSmallIntegerField('pořadí', default=1)
+    published = models.BooleanField('publikováno', default=False, help_text='Bude se zobrazovat všem návštěvníkům webu.')
 
     class Meta:
         verbose_name = 'Sponzor'
